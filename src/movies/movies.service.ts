@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Movie } from './entities/movie.entity.ts';
+import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { HttpService } from '@nestjs/axios';
@@ -10,7 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   SwapiFilm,
   SwapiResponse,
-} from '../common/interfaces/swapi-response.interface';
+} from '../../dist/movies/dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {

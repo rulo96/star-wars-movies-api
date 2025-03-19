@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_nest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: emi123456
+      MYSQL_DATABASE: movie_management
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_nest
+    restart: always
+    ports:
+      - "8080:80" # Puedes cambiar el puerto 8080 si lo necesitas
+    environment:
+      PMA_HOST: db # El nombre del servicio de la base de datos
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1 # Permite conectarse a cualquier servidor MySQL (opcional)
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:

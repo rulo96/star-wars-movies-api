@@ -16,4 +16,7 @@ export class Movie {
 
   @Column()
   director: string;
+
+  @Column({ nullable: true })
+  url: string;
 }

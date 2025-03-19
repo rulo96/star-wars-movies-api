@@ -1,26 +1,4 @@
-interface DatabaseConfig {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-}
-
-interface JwtConfig {
-  secret: string;
-  expiresIn: string;
-}
-
-interface SwapiConfig {
-  baseUrl: string;
-}
-
-interface AppConfig {
-  port: number;
-  database: DatabaseConfig;
-  jwt: JwtConfig;
-  swapi: SwapiConfig;
-}
+import { AppConfig } from './interface/app-config.interface';
 
 export const configuration = (): AppConfig => ({
   port: parseInt(process.env.PORT || '3000', 10),
