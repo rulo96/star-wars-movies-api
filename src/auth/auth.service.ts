@@ -18,7 +18,8 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<{ access_token: string }> {
-    const { email, password, name, role } = registerDto;
+    const { email, password, name, role, firstName, lastName, avatarUrl } =
+      registerDto;
 
     // Verificar si el usuario ya existe
     const userExists = await this.usersService.findByEmail(email);
@@ -35,6 +36,9 @@ export class AuthService {
       password: hashedPassword,
       name,
       role,
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
+      avatarUrl: avatarUrl ?? '',
     });
 
     // Generar token JWT

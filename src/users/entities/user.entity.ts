@@ -10,12 +10,13 @@ import {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column({ select: false })
+  //@Column({ select: false })
+  @Column()
   password: string;
 
   @Column()
@@ -28,13 +29,13 @@ export class User {
   })
   role: Role;
 
-  @Column({ length: 100 })
-  firstName: string;
+  @Column({ length: 100, nullable: true })
+  firstName?: string;
 
-  @Column({ length: 100 })
-  lastName: string;
+  @Column({ length: 100, nullable: true })
+  lastName?: string;
 
-  @Column({ default: false })
+  @Column({ default: true })
   isActive: boolean;
 
   @Column({ nullable: true })

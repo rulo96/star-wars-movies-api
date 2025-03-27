@@ -15,6 +15,10 @@ async function bootstrap() {
     }),
   );
 
+  // Prefijo global para todas las rutas
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+
   // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('API de Star Wars')
@@ -23,10 +27,9 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
 
-  // Prefijo global para todas las rutas
-  app.setGlobalPrefix('api');
+  // Configurar Swagger con el prefijo global
+  SwaggerModule.setup(`${globalPrefix}/docs`, app, document);
 
   // Habilitar CORS
   app.enableCors();

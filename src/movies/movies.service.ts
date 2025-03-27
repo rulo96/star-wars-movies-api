@@ -7,10 +7,7 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import {
-  SwapiFilm,
-  SwapiResponse,
-} from '../../dist/movies/dto/update-movie.dto';
+import { SwapiResponse, SwapiFilm } from './dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {
@@ -30,7 +27,7 @@ export class MoviesService {
     return this.moviesRepository.find();
   }
 
-  async findOne(id: number): Promise<Movie> {
+  async findOne(id: string): Promise<Movie> {
     const movie = await this.moviesRepository.findOne({ where: { id } });
     if (!movie) {
       throw new NotFoundException(`Película con ID ${id} no encontrada`);
@@ -38,13 +35,13 @@ export class MoviesService {
     return movie;
   }
 
-  async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+  async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie> {
     const movie = await this.findOne(id);
     this.moviesRepository.merge(movie, updateMovieDto);
     return this.moviesRepository.save(movie);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const movie = await this.findOne(id);
     await this.moviesRepository.remove(movie);
   }
@@ -56,25 +53,38 @@ export class MoviesService {
     );
 
     const films = response.data.results;
-    const savedMovies: Movie[] = [];
 
-    for (const film of films) {
-      // Verificar si la película ya existe en la base de datos
-      const existingMovie = await this.moviesRepository.findOne({
-        where: { url: film.url },
-      });
+    return Promise.all(
+      films.map(async (film) => {
+        const existingMovie = await this.moviesRepository.findOne({
+          where: { url: film.url },
+        });
 
-      if (existingMovie) {
-        // Actualizar película existente
-        this.moviesRepository.merge(existingMovie, film);
-        savedMovies.push(await this.moviesRepository.save(existingMovie));
-      } else {
-        // Crear nueva película
-        const newMovie = this.moviesRepository.create(film);
-        savedMovies.push(await this.moviesRepository.save(newMovie));
-      }
-    }
+        const movieData = {
+          title: film.title,
+          episode_id: film.episode_id,
+          opening_crawl: film.opening_crawl,
+          director: film.director,
+          producer: film.producer,
+          release_date: film.release_date,
+          species: film.species,
+          starships: film.starships,
+          vehicles: film.vehicles,
+          characters: film.characters,
+          planets: film.planets,
+          url: film.url,
+          created: film.created,
+          edited: film.edited,
+        };
 
-    return savedMovies;
+        if (existingMovie) {
+          this.moviesRepository.merge(existingMovie, movieData);
+          return this.moviesRepository.save(existingMovie);
+        } else {
+          const newMovie = this.moviesRepository.create(movieData);
+          return this.moviesRepository.save(newMovie);
+        }
+      }),
+    );
   }
 }

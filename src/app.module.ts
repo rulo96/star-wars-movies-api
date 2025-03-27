@@ -7,6 +7,8 @@ import { configuration } from './config/configuration';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MoviesModule } from './movies/movies.module';
+import { Movie } from './movies/entities/movie.entity';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { MoviesModule } from './movies/movies.module';
         username: configService.get('database.username'),
         password: configService.get('database.password'),
         database: configService.get('database.database'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [User, Movie],
         synchronize: true, // Configurar como false en produccion
       }),
     }),

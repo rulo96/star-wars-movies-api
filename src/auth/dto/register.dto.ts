@@ -29,6 +29,24 @@ export class RegisterDto {
   name: string;
 
   @ApiProperty({
+    example: 'John',
+    description: 'Primer nombre del usuario (opcional)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @ApiProperty({
+    example: 'Doe',
+    description: 'Apellido del usuario (opcional)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @ApiProperty({
     enum: Role,
     description: 'Rol del usuario',
     default: Role.USER,
@@ -36,4 +54,13 @@ export class RegisterDto {
   @IsEnum(Role)
   @IsOptional()
   role?: Role;
+
+  @ApiProperty({
+    example: 'https://example.com/avatar.jpg',
+    description: 'URL del avatar del usuario (opcional)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 }

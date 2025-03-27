@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -21,11 +22,22 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id: Number(id) } });
+    if (!isUUID(id)) {
+      throw new Error('El ID proporcionado no es un UUID válido.');
+    }
+
+    return this.usersRepository.findOne({ where: { id } });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email } });
+    try {
+      return await this.usersRepository.findOne({ where: { email } });
+    } catch (error) {
+      console.error(`Error al buscar el usuario con email ${email}:`, error);
+      throw new Error(
+        'No se pudo buscar el usuario. Por favor, intente nuevamente.',
+      );
+    }
   }
 
   async remove(id: number): Promise<void> {

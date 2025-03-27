@@ -21,6 +21,18 @@ export class CreateUserDto {
   @IsString()
   name: string;
 
+  @IsOptional()
+  @IsString()
+  firstName: string;
+
+  @IsOptional()
+  @IsString()
+  lastName: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl: string;
+
   @ApiProperty({
     enum: Role,
     description: 'Rol del usuario',

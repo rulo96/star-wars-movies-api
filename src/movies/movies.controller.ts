@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -42,8 +43,15 @@ export class MoviesController {
     status: 403,
     description: 'Prohibido - Se requiere rol de administrador.',
   })
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  async create(@Body() createMovieDto: CreateMovieDto) {
+    try {
+      return await this.moviesService.create(createMovieDto);
+    } catch (error) {
+      console.error('Error al crear la pelicula:', error);
+      throw new BadRequestException(
+        'No se pudo crear la película. Verifica los datos enviados.',
+      );
+    }
   }
 
   @Get()
@@ -65,7 +73,7 @@ export class MoviesController {
   @ApiResponse({ status: 401, description: 'No autorizado.' })
   @ApiResponse({ status: 404, description: 'Película no encontrada.' })
   findOne(@Param('id') id: string) {
-    return this.moviesService.findOne(+id);
+    return this.moviesService.findOne(id);
   }
 
   @Patch(':id')
@@ -84,7 +92,7 @@ export class MoviesController {
   })
   @ApiResponse({ status: 404, description: 'Película no encontrada.' })
   update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
-    return this.moviesService.update(+id, updateMovieDto);
+    return this.moviesService.update(id, updateMovieDto);
   }
 
   @Delete(':id')
@@ -100,7 +108,7 @@ export class MoviesController {
   })
   @ApiResponse({ status: 404, description: 'Película no encontrada.' })
   remove(@Param('id') id: string) {
-    return this.moviesService.remove(+id);
+    return this.moviesService.remove(id);
   }
 
   @Post('sync')
