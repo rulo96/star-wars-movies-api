@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,7 +19,6 @@ import { User } from './users/entities/user.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        //type: 'mysql',
         type: 'postgres',
         host: configService.get('database.host'),
         port: configService.get('database.port'),

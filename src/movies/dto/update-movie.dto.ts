@@ -3,7 +3,6 @@ import { CreateMovieDto } from './create-movie.dto';
 
 export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
 
-// src/common/interfaces/swapi-response.interface.ts
 export interface SwapiResponse<T> {
   count: number;
   next: string | null;

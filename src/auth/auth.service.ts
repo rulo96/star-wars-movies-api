@@ -41,7 +41,6 @@ export class AuthService {
       avatarUrl: avatarUrl ?? '',
     });
 
-    // Generar token JWT
     return this.generateToken(newUser);
   }
 
